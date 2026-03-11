@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+*.db
+*.sqlite
+instance/
+.env
+uploads/*
+!uploads/.gitkeep
+venv/
+.vscode/
+instance/
+__pycache__/
+*.pyc
+static/resumes/

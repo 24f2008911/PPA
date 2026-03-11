@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% block title %}Company Dashboard{% endblock %}
+{% block content %}
+<h2 class="mb-4"><i class="bi bi-speedometer2"></i> Company Dashboard</h2>
+
+<div class="row mb-4">
+    <div class="col-md-4 mb-3">
+        <div class="card bg-success text-white shadow">
+            <div class="card-body text-center">
+                <i class="bi bi-building display-4"></i>
+                <h4 class="mt-2">{{ company.company_name }}</h4>
+                <p>{{ company.industry or 'N/A' }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card bg-info text-white shadow">
+            <div class="card-body text-center">
+                <i class="bi bi-briefcase-fill display-4"></i>
+                <h2 class="mt-2">{{ drives|length }}</h2>
+                <p>Placement Drives</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card bg-warning text-dark shadow">
+            <div class="card-body text-center">
+                <i class="bi bi-people-fill display-4"></i>
+                <h2 class="mt-2">{{ total_apps }}</h2>
+                <p>Total Applications</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h4>My Placement Drives</h4>
+    <a href="{{ url_for('company_create_drive') }}" class="btn btn-success"><i class="bi bi-plus-circle"></i> Create New Drive</a>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-hover table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Job Title</th>
+                <th>Location</th>
+                <th>Salary</th>
+                <th>Deadline</th>
+                <th>Status</th>
+                <th>Applicants</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for d in drives %}
+            <tr>
+                <td>{{ d.id }}</td>
+                <td>{{ d.job_title }}</td>
+                <td>{{ d.location or '-' }}</td>
+                <td>{{ d.salary_range or '-' }}</td>
+                <td>{{ d.deadline.strftime('%d-%m-%Y') if d.deadline else '-' }}</td>
+                <td>
+                    <span class="badge bg-{{ 'success' if d.status == 'Approved' else 'warning' if d.status == 'Pending' else 'danger' if d.status == 'Rejected' else 'secondary' }}">
+                        {{ d.status }}
+                    </span>
+                </td>
+                <td>{{ d.applications|length }}</td>
+                <td>
+                    <a href="{{ url_for('company_drive_applications', id=d.id) }}" class="btn btn-sm btn-primary">View Apps</a>
+                    <a href="{{ url_for('company_edit_drive', id=d.id) }}" class="btn btn-sm btn-warning">Edit</a>
+                    {% if d.status != 'Closed' %}
+                    <a href="{{ url_for('company_close_drive', id=d.id) }}" class="btn btn-sm btn-secondary">Close</a>
+                    {% endif %}
+                    <a href="{{ url_for('company_delete_drive', id=d.id) }}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete this drive?')">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% if not drives %}
+<p class="text-muted text-center">No placement drives yet. Create one!</p>
+{% endif %}
+{% endblock %}

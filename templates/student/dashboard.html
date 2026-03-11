@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% block title %}Student Dashboard{% endblock %}
+{% block content %}
+<h2 class="mb-4"><i class="bi bi-speedometer2"></i> Student Dashboard</h2>
+
+<div class="row mb-4">
+    <div class="col-md-4 mb-3">
+        <div class="card bg-primary text-white shadow">
+            <div class="card-body text-center">
+                <i class="bi bi-person-fill display-4"></i>
+                <h4 class="mt-2">{{ student.name }}</h4>
+                <p>{{ student.degree or '' }} {{ student.branch or '' }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card bg-info text-white shadow">
+            <div class="card-body text-center">
+                <i class="bi bi-briefcase-fill display-4"></i>
+                <h2 class="mt-2">{{ approved_drives|length }}</h2>
+                <p>Available Drives</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card bg-warning text-dark shadow">
+            <div class="card-body text-center">
+                <i class="bi bi-file-earmark-check display-4"></i>
+                <h2 class="mt-2">{{ my_applications|length }}</h2>
+                <p>My Applications</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-7 mb-4">
+        <div class="card shadow">
+            <div class="card-header bg-info text-white d-flex justify-content-between">
+                <span><i class="bi bi-briefcase"></i> Recent Approved Drives</span>
+                <a href="{{ url_for('student_drives') }}" class="text-white">View All</a>
+            </div>
+            <div class="card-body">
+                {% for d in approved_drives[:5] %}
+                <div class="border-bottom pb-2 mb-2">
+                    <strong>{{ d.job_title }}</strong> - {{ d.company.company_name }}
+                    <br><small class="text-muted">{{ d.location or '' }} | {{ d.salary_range or '' }} | Deadline: {{ d.deadline.strftime('%d-%m-%Y') if d.deadline else 'N/A' }}</small>
+                    <br>
+                    {% if d.id in applied_drive_ids %}
+                    <span class="badge bg-secondary">Already Applied</span>
+                    {% else %}
+                    <a href="{{ url_for('student_apply_drive', id=d.id) }}" class="btn btn-sm btn-success mt-1">Apply Now</a>
+                    {% endif %}
+                </div>
+                {% endfor %}
+                {% if not approved_drives %}
+                <p class="text-muted">No approved drives available.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-5 mb-4">
+        <div class="card shadow">
+            <div class="card-header bg-warning text-dark d-flex justify-content-between">
+                <span><i class="bi bi-clock-history"></i> My Applications</span>
+                <a href="{{ url_for('student_my_applications') }}" class="text-dark">View All</a>
+            </div>
+            <div class="card-body">
+                {% for app in my_applications[:5] %}
+                <div class="border-bottom pb-2 mb-2">
+                    <strong>{{ app.drive.job_title }}</strong>
+                    <br><small>{{ app.drive.company.company_name }}</small>
+                    <span class="badge bg-{{ 'success' if app.status == 'Selected' else 'info' if app.status == 'Shortlisted' else 'danger' if app.status == 'Rejected' else 'secondary' }} float-end">
+                        {{ app.status }}
+                    </span>
+                </div>
+                {% endfor %}
+                {% if not my_applications %}
+                <p class="text-muted">No applications yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

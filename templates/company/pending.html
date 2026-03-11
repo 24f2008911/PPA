@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}Pending Approval{% endblock %}
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6 text-center">
+        <div class="card shadow">
+            <div class="card-body py-5">
+                <i class="bi bi-hourglass-split display-1 text-warning"></i>
+                <h3 class="mt-3">Awaiting Admin Approval</h3>
+                <p class="text-muted">Your company registration is currently <strong>{{ company.approval_status }}</strong>.</p>
+                {% if company.approval_status == 'Rejected' %}
+                <div class="alert alert-danger">Your registration was rejected. Please contact the admin.</div>
+                {% else %}
+                <p>Please wait for the admin to approve your account. You will be able to access the dashboard once approved.</p>
+                {% endif %}
+                <a href="{{ url_for('logout') }}" class="btn btn-outline-primary mt-3">Logout</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

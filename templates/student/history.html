@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block title %}Placement History{% endblock %}
+{% block content %}
+<h2 class="mb-4"><i class="bi bi-clock-history"></i> Placement History</h2>
+
+<div class="table-responsive">
+    <table class="table table-hover table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>App ID</th>
+                <th>Job Title</th>
+                <th>Company</th>
+                <th>Location</th>
+                <th>Salary</th>
+                <th>Drive Status</th>
+                <th>Application Status</th>
+                <th>Applied On</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for app in applications %}
+            <tr class="{{ 'table-success' if app.status == 'Selected' else 'table-danger' if app.status == 'Rejected' else '' }}">
+                <td>{{ app.id }}</td>
+                <td>{{ app.drive.job_title }}</td>
+                <td>{{ app.drive.company.company_name }}</td>
+                <td>{{ app.drive.location or '-' }}</td>
+                <td>{{ app.drive.salary_range or '-' }}</td>
+                <td>
+                    <span class="badge bg-{{ 'success' if app.drive.status == 'Approved' else 'secondary' if app.drive.status == 'Closed' else 'warning' }}">
+                        {{ app.drive.status }}
+                    </span>
+                </td>
+                <td>
+                    <span class="badge bg-{{ 'success' if app.status == 'Selected' else 'info' if app.status == 'Shortlisted' else 'danger' if app.status == 'Rejected' else 'secondary' }}">
+                        {{ app.status }}
+                    </span>
+                </td>
+                <td>{{ app.application_date.strftime('%d-%m-%Y %H:%M') }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% if not applications %}
+<p class="text-muted text-center">No placement history.</p>
+{% endif %}
+{% endblock %}

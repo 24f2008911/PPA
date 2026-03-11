@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% block title %}Admin Dashboard{% endblock %}
+{% block content %}
+<h2 class="mb-4"><i class="bi bi-speedometer2"></i> Admin Dashboard</h2>
+
+<div class="row">
+    <div class="col-md-3 mb-3">
+        <div class="card bg-primary text-white shadow">
+            <div class="card-body text-center">
+                <i class="bi bi-mortarboard-fill display-4"></i>
+                <h2 class="mt-2">{{ total_students }}</h2>
+                <p>Total Students</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card bg-success text-white shadow">
+            <div class="card-body text-center">
+                <i class="bi bi-building display-4"></i>
+                <h2 class="mt-2">{{ total_companies }}</h2>
+                <p>Total Companies</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card bg-info text-white shadow">
+            <div class="card-body text-center">
+                <i class="bi bi-briefcase-fill display-4"></i>
+                <h2 class="mt-2">{{ total_drives }}</h2>
+                <p>Placement Drives</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card bg-warning text-dark shadow">
+            <div class="card-body text-center">
+                <i class="bi bi-file-earmark-text display-4"></i>
+                <h2 class="mt-2">{{ total_applications }}</h2>
+                <p>Applications</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-3">
+    <div class="col-md-6 mb-3">
+        <div class="card shadow">
+            <div class="card-header bg-danger text-white">
+                <i class="bi bi-exclamation-triangle"></i> Pending Approvals
+            </div>
+            <div class="card-body">
+                <p><strong>{{ pending_companies }}</strong> company registrations pending</p>
+                <a href="{{ url_for('admin_companies') }}" class="btn btn-sm btn-outline-danger">Review Companies</a>
+                <hr>
+                <p><strong>{{ pending_drives }}</strong> placement drives pending</p>
+                <a href="{{ url_for('admin_drives') }}" class="btn btn-sm btn-outline-danger">Review Drives</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 mb-3">
+        <div class="card shadow">
+            <div class="card-header bg-secondary text-white">
+                <i class="bi bi-clock-history"></i> Recent Applications
+            </div>
+            <div class="card-body">
+                {% if recent_applications %}
+                <table class="table table-sm">
+                    <thead>
+                        <tr><th>Student</th><th>Drive</th><th>Status</th><th>Date</th></tr>
+                    </thead>
+                    <tbody>
+                        {% for app in recent_applications %}
+                        <tr>
+                            <td>{{ app.student.name }}</td>
+                            <td>{{ app.drive.job_title }}</td>
+                            <td><span class="badge bg-{{ 'success' if app.status == 'Selected' else 'warning' if app.status == 'Shortlisted' else 'danger' if app.status == 'Rejected' else 'secondary' }}">{{ app.status }}</span></td>
+                            <td>{{ app.application_date.strftime('%d-%m-%Y') }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p class="text-muted">No applications yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

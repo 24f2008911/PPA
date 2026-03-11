@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block title %}Applications - {{ drive.job_title }}{% endblock %}
+{% block content %}
+<h2 class="mb-2"><i class="bi bi-people-fill"></i> Applications for: {{ drive.job_title }}</h2>
+<p class="text-muted mb-4">Status: <span class="badge bg-{{ 'success' if drive.status == 'Approved' else 'warning' }}">{{ drive.status }}</span></p>
+
+<div class="table-responsive">
+    <table class="table table-hover table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>App ID</th>
+                <th>Student Name</th>
+                <th>Email</th>
+                <th>Degree</th>
+                <th>CGPA</th>
+                <th>Skills</th>
+                <th>Resume</th>
+                <th>Status</th>
+                <th>Applied On</th>
+                <th>Update Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for app in applications %}
+            <tr>
+                <td>{{ app.id }}</td>
+                <td>{{ app.student.name }}</td>
+                <td>{{ app.student.email }}</td>
+                <td>{{ app.student.degree or '-' }}</td>
+                <td>{{ app.student.cgpa or '-' }}</td>
+                <td>{{ app.student.skills or '-' }}</td>
+                <td>
+                    {% if app.student.resume %}
+                    <a href="{{ url_for('static', filename='resumes/' + app.student.resume) }}" target="_blank" class="btn btn-sm btn-outline-primary">View</a>
+                    {% else %}-{% endif %}
+                </td>
+                <td>
+                    <span class="badge bg-{{ 'success' if app.status == 'Selected' else 'info' if app.status == 'Shortlisted' else 'danger' if app.status == 'Rejected' else 'secondary' }}">
+                        {{ app.status }}
+                    </span>
+                </td>
+                <td>{{ app.application_date.strftime('%d-%m-%Y') }}</td>
+                <td>
+                    <form method="POST" action="{{ url_for('company_update_application_status', id=app.id) }}" class="d-inline">
+                        <select name="status" class="form-select form-select-sm d-inline w-auto">
+                            <option value="Shortlisted" {{ 'selected' if app.status == 'Shortlisted' else '' }}>Shortlisted</option>
+                            <option value="Selected" {{ 'selected' if app.status == 'Selected' else '' }}>Selected</option>
+                            <option value="Rejected" {{ 'selected' if app.status == 'Rejected' else '' }}>Rejected</option>
+                        </select>
+                        <button type="submit" class="btn btn-sm btn-primary">Update</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% if not applications %}
+<p class="text-muted text-center">No applications yet.</p>
+{% endif %}
+<a href="{{ url_for('company_dashboard') }}" class="btn btn-secondary mt-3">Back to Dashboard</a>
+{% endblock %}

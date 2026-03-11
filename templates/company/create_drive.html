@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block title %}Create Placement Drive{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-success text-white">
+                <h3><i class="bi bi-plus-circle"></i> Create Placement Drive</h3>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Job Title *</label>
+                            <input type="text" name="job_title" class="form-control" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Location</label>
+                            <input type="text" name="location" class="form-control">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Job Description</label>
+                        <textarea name="job_description" class="form-control" rows="3"></textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Salary Range</label>
+                            <input type="text" name="salary_range" class="form-control" placeholder="e.g. 5-8 LPA">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Experience Required</label>
+                            <input type="text" name="experience" class="form-control" placeholder="e.g. Fresher / 1-2 years">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Eligibility Criteria</label>
+                        <textarea name="eligibility" class="form-control" rows="2" placeholder="e.g. Minimum 7.0 CGPA, B.Tech CS/IT"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Required Skills</label>
+                        <input type="text" name="required_skills" class="form-control" placeholder="e.g. Python, SQL, Machine Learning">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Application Deadline</label>
+                        <input type="date" name="deadline" class="form-control">
+                    </div>
+                    <button type="submit" class="btn btn-success">Create Drive</button>
+                    <a href="{{ url_for('company_dashboard') }}" class="btn btn-secondary">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
